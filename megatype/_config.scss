@@ -139,19 +139,22 @@ $sans: (
     font-family: '"Helvetica Neue", Arial, sans-serif',
     regular: normal,
     bold: bold,
-    cap-height: 0.71
+    cap-height: 0.71,
+    cap-position: 0.5
 ) !default;
 
 $serif: (
     font-family: 'Georgia, serif',
     regular: normal,
     bold: bold,
-    cap-height: 0.66
+    cap-height: 0.66,
+    cap-position: 0.5
 ) !default;
 
 $monospace: (
     font-family: 'Menlo, Courier, monospace',
     regular: 400,
-    cap-height: 0.68
+    cap-height: 0.68,
+    cap-position: 0.5
 ) !default;
 

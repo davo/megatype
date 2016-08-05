@@ -169,8 +169,6 @@
         }
     }
 
-
-
     @if unit($fontsize) == "rem" {
         $fontsize: rem-to-px($fontsize);
     }
@@ -196,6 +194,17 @@
 
     // We also need to store our cap-height
     $cap-height: map-get($font, cap-height);
+
+    // Store cap position
+    $cap-position: map-get($font, cap-position);
+
+    // check cap position is non-null, otherwise assign default of 0.5
+    @if $cap-position == null {
+        $cap-position: 0.5;
+    }
+
+    // work out what proportion to shift our type by
+    $cap-offset: (0.5 - $cap-position) * -1;
 
     // Let's set our font-size in rems
     $fs-rem: px-to-rem($fontsize);
@@ -233,12 +242,14 @@
     // store a unitless value for calulating offsets later
     $lh-calc: no-unit($lineheight);
 
-
     // Set our leader and trailer values.
     // first we need to shift our type to sit on the baseline. For this we'll use relative positioning and top
     // we'll avoid collapsing margins by using padding above, and margin below
     $type-proportion: $fs-calc * $cap-height; // height in px of type itself (this is the space taken up between the real baseline and cap height)
     $type-space: 1px * ($lh-calc - $type-proportion) / 2; // extra space below baseline, and above cap height
+
+    // calculate cap-shift. This is the space in pixels that a typeface needs to move to be centered in it's line-height
+    $cap-shift: $fontsize * $cap-offset - 0.75px;
 
     // initialising a few helper variables for calculating our offset
     $modulo: 0;
@@ -260,8 +271,8 @@
     }
 
     // $type-top: $leader;
-    $type-top: $leader - $type-space + $shift;
-    $type-bottom: $trailer - $type-space + $type-top;
+    $type-top: $leader - $type-space + $shift - $cap-shift;
+    $type-bottom: $trailer - $type-space + $type-top + $cap-shift;
 
     @if $snap == true {
         $type-bottom: rem-to-px(round(px-to-rem($type-bottom)));
@@ -295,15 +306,13 @@
         }
     }
 
-
-
     // apply debugging
     @if $debug-hover == true {
         &:hover {
-            @include debug-type($type-top, $type-bottom, $type-space, $debug-cap, $debug-spacing);
+            @include debug-type($type-top, $type-bottom, $type-space, $debug-cap, $debug-spacing, $cap-shift);
         }
     } @else {
-        @include debug-type($type-top, $type-bottom, $type-space, $debug-cap, $debug-spacing);
+        @include debug-type($type-top, $type-bottom, $type-space, $debug-cap, $debug-spacing, $cap-shift);
     }
 }
 
