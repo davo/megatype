@@ -47,40 +47,88 @@
     }
 
     html {
-        $min-size: nth($sizes, 1);
-        $max-size: nth($sizes, 2);
+        // list compatible key
+        $default-break-key: $default-break + 1;
+
+        // set default
+        font-size: nth($sizes, $default-break-key) / 16px * 100%;
+
+        // get default size, and next size
+        $min-size: nth($sizes, $default-break-key) * nth($sizes, 1)/nth($sizes, 2);
+        $max-size: nth($sizes, $default-break-key);
         $min-width: break-get(nth($breaks, 2), start) / 2;
         $max-width: break-get(nth($breaks, 2), start);
 
-        font-size: $min-size / 16px * 100%;
-
         @if ($baseline-scaling == true) {
-            @media screen and (min-width: px-to-em(break-get(nth($breaks, 2), start) / 2)) {
-                font-size: calc(#{$min-size} + #{no-unit($max-size) - no-unit($min-size)} * (100vw - #{$min-width}) / #{no-unit($max-width) - no-unit($min-width)});
+            @if $default-break == 0 {
+                @media screen and (min-width: px-to-em(break-get(nth($breaks, 1), start) / 2)) {
+                    font-size: calc(#{$min-size} + #{no-unit($max-size) - no-unit($min-size)} * (100vw - #{$min-width}) / #{no-unit($max-width) - no-unit($min-width)});
+                }
+            } @else {
+                @warn "baseline scaling is currently only supported by mobile-first setups: please set $default-break: 0; to use this feature";
             }
         }
 
-        // Loop through breakpoints.
-        @for $i from 2 through $breakpoint-count {
-            @include min-width($i - 1) {
-                $min-size: nth($sizes, $i);
-                $min-width: break-get(nth($breaks, $i), start);
+        // min widths
+        // output breakpoints higher than $default-break using min-width media queries
+        @if $default-break + 1 < $breakpoint-count {
+            @for $i from $default-break-key + 1 through $breakpoint-count {
+                @include min-width($i - 1) {
+                    $min-size: nth($sizes, $i);
+                    $min-width: break-get(nth($breaks, $i), start);
 
-                font-size: $min-size / 16px * 100%;
+                    font-size: $min-size / 16px * 100%;
 
-                @if ($baseline-scaling == true) {
-                    @if $i < $breakpoint-count {
-                        $max-size: nth($sizes, $i + 1);
-                        $max-width: break-get(nth($breaks, $i + 1), start);
-                    } @else {
-                        // largest breakpoint. Keep the scaling consitent with the previous breakpoint
-                        $size-diff: nth($sizes, $i) - nth($sizes, $i - 1);
-                        $width-diff: break-get(nth($breaks, $i), start) - break-get(nth($breaks, $i - 1), start);
-                        $max-size: nth($sizes, $i) + $size-diff;
-                        $max-width: break-get(nth($breaks, $i), start) + $width-diff;
+                    @if ($baseline-scaling == true) {
+                        @if $default-break == 0 {
+                            @if $i < $breakpoint-count {
+                                $max-size: nth($sizes, $i + 1);
+                                $max-width: break-get(nth($breaks, $i + 1), start);
+                            } @else {
+                                // largest breakpoint. Keep the scaling consitent with the previous breakpoint
+                                $size-diff: nth($sizes, $i) - nth($sizes, $i - 1);
+                                $width-diff: break-get(nth($breaks, $i), start) - break-get(nth($breaks, $i - 1), start);
+                                $max-size: nth($sizes, $i) + $size-diff;
+                                $max-width: break-get(nth($breaks, $i), start) + $width-diff;
+                            }
+
+                            font-size: calc(#{$min-size} + #{no-unit($max-size) - no-unit($min-size)} * (100vw - #{$min-width}) / #{no-unit($max-width) - no-unit($min-width)});
+                        } @else {
+                            @warn "baseline scaling is currently only supported by mobile-first setups: please set $default-break: 0; to use this feature";
+                        }
                     }
+                }
+            }
+        }
 
-                    font-size: calc(#{$min-size} + #{no-unit($max-size) - no-unit($min-size)} * (100vw - #{$min-width}) / #{no-unit($max-width) - no-unit($min-width)});
+        // max widths
+        // output breakpoints lower than $default-break using max-width media queries
+        @if $default-break > 0 {
+            @for $i from $default-break through 1 {
+                @include max-width($i) {
+                    $min-size: nth($sizes, $i);
+                    $min-width: break-get(nth($breaks, $i), start);
+
+                    font-size: $min-size / 16px * 100%;
+
+                    @if ($baseline-scaling == true) {
+                        @if $default-break == 0 {
+                            @if $i < $breakpoint-count {
+                                $max-size: nth($sizes, $i + 1);
+                                $max-width: break-get(nth($breaks, $i + 1), start);
+                            } @else {
+                                // largest breakpoint. Keep the scaling consitent with the previous breakpoint
+                                $size-diff: nth($sizes, $i) - nth($sizes, $i - 1);
+                                $width-diff: break-get(nth($breaks, $i), start) - break-get(nth($breaks, $i - 1), start);
+                                $max-size: nth($sizes, $i) + $size-diff;
+                                $max-width: break-get(nth($breaks, $i), start) + $width-diff;
+                            }
+
+                            font-size: calc(#{$min-size} + #{no-unit($max-size) - no-unit($min-size)} * (100vw - #{$min-width}) / #{no-unit($max-width) - no-unit($min-width)});
+                        } @else {
+                            @warn "baseline scaling is currently only supported by mobile-first setups: please set $default-break: 0; to use this feature";
+                        }
+                    }
                 }
             }
         }
@@ -94,7 +142,7 @@
 
 // Set type, measuring from baseline and cap-height
 // output is affected by $baseline-snap config; will snap to nearest baseline if so
-@mixin typeset($font, $fontsize, $lineheight, $leader: 0px, $trailer: 0px, $snap: $baseline-snap) {
+@mixin typeset($font, $fontsize, $lineheight, $leader: 0px, $trailer: 0px, $snap: $baseline-snap, $use-subdivisions: $baseline-subdivisions) {
     $context: index($breaks, $current-breakpoint);
 
     // Lets write some tests first
@@ -223,8 +271,16 @@
     // Next, set our linehight as a unitless value
     // if baseline snap is on, we'll round these values to 1 baseline unit (1rem)
     @if $snap == true {
+        // set default for subdivisions if not set, or explicitly turned off
+        @if type-of($use-subdivisions) != number {
+            $use-subdivisions: 1;
+        }
+
+        @if $use-subdivisions > 1 and $current-rootsize % $use-subdivisions > 0 {
+            @warn "You have specified a baseline subdivision (#{$use-subdivisions}) for break #{$current-breakpoint} (rootsize #{$current-rootsize}) that will not resolve to whole pixel line-heights (#{$current-rootsize} / #{$use-subdivisions} = #{$current-rootsize / $use-subdivisions}). This will cause severe rounding errors in browsers that will push your type off the grid; it is recommended you review your settings.";
+        }
         // starting with lineheight, convert to rem and round the value, then convert back to px
-        $lineheight: rem-to-px(round(px-to-rem($lineheight)));
+        $lineheight: rem-to-px(round(px-to-rem($lineheight * $use-subdivisions))) / $use-subdivisions;
     }
 
     // compute an integer and set the line height
@@ -232,11 +288,13 @@
 
     line-height: $lh-integer;
 
-    // we have to correct for a bug with the way webkit renders unitless line height :(
+    // we have to correct for a bug with the way webkit safari renders unitless line height :(
     // It computes line height to the correct value but often when rendered to the screen it rounds 1px incorrectly.
     // See: https://bugs.webkit.org/show_bug.cgi?id=155286
-    @media screen and (-webkit-min-device-pixel-ratio:0) {
-        line-height: px-to-rem($lineheight);
+    @if $webkit-line-height-fix == true {
+        @media screen and (-webkit-min-device-pixel-ratio:0) {
+            line-height: px-to-rem($lineheight);
+        }
     }
 
     // store a unitless value for calulating offsets later
@@ -300,7 +358,7 @@
     // should warn user if baseline math outputs something unexpected
     // tolerance is 1px by default, can be set in config, see $debug-tolerance variable
     @if $snap == true {
-        $snap-check: rem-to-px(($fs-rem * $lh-integer + px-to-rem($type-bottom))) % $current-rootsize;
+        $snap-check: rem-to-px(($fs-rem * $lh-integer + px-to-rem($type-bottom))) % ($current-rootsize / $use-subdivisions);
         @if $snap-check > $debug-tolerance or $snap-check < -$debug-tolerance {
             @warn "baseline grid appears to be calculated off by #{$snap-check} at breakpoint #{$current-breakpoint} ($debug-tolerance: #{$debug-tolerance})"
         }

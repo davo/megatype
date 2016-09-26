@@ -125,23 +125,28 @@ $sans: (
     font-family: '"Helvetica Neue", Arial, sans-serif',
     regular: normal,
     bold: bold,
-    cap-height: 0.71
+    cap-height: 0.71,
+    cap-position: 0.5
 ) !default;
 
 $serif: (
     font-family: 'Georgia, serif',
     regular: normal,
     bold: bold,
-    cap-height: 0.69
+    cap-height: 0.69,
+    cap-position: 0.5
 ) !default;
 
 $monospace: (
     font-family: 'Menlo, Courier, monospace',
     regular: 400,
-    cap-height: 0.68
+    cap-height: 0.68,
+    cap-position: 0.5
 ) !default;
 ```
-To set the correct `cap-height`, you will need to tweak this value and check in your browser until your typeface sits nicely on the baseline.    
+To set the correct `cap-height`, you will need to tweak this value and check in your browser until your typeface sits nicely on the baseline. 
+
+For most typefaces you will not need to change the default `cap-position`. However, some fonts position the cap height above or below the vertical centre, which can be problematic in some situations. This property can be tweaked to correct a problematic cap alignment. 
 
 **Tip:** Setting `$debug-allow` and `$debug-baseline` variables to `true` will display a visual representation of the baseline on your typeset elements.
 
