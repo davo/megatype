@@ -39,9 +39,44 @@
         @if $min-val == number or $max-val == number {
             // first, lets kick any breakpoint variables back to the breakpoint-layout mixin, which can handle these
             @if unitless($min) and unitless($max) {
-                @include breakpoint-layout($min, $max) {
-                    @content;
-                };
+                @if map-has-key($breakpoint-map, $min) {
+                    // make current breakpoint context available in global scope
+                    $current-breakpoint: $min !global;
+                    $current-rootsize: break-get($min, rootsize) !global;
+
+                    @if $current-breakpoint == 0 and $max == 0 {
+                        @content;
+                    } @else {
+                        $minw: break-get($min, start);
+                        $maxw: none;
+
+                        @if map-has-key($breakpoint-map, $max) {
+                            $maxw: break-get($max, start) - 1px;
+                        } @else {
+                            @warn "#{$max} is not a valid breakpoint number";
+                        }
+
+                        @if $min != 0 and $max != 0 {
+                            @include media($minw, $maxw) {
+                                @content;
+                            }
+                        } @else if $min != 0 {
+                            @include media($minw) {
+                                @content;
+                            }
+                        } @else if $max != 0 {
+                            @include media(0, $maxw) {
+                                @content;
+                            }
+                        }
+                    }
+
+                    // reset current breakpoint context
+                    $current-breakpoint: 0 !global;
+                    $current-rootsize: break-get(0, rootsize) !global;
+                } @else {
+                    @warn "#{$min} is not a valid breakpoint number";
+                }
             } @else {
                 @if $min-unit == "px" or $min-unit == "em" {
                     // If using other numbers output value in ems either for min, min & max or max width breakpoints.
@@ -70,51 +105,15 @@
     }
 }
 
-
-// Wrapper for media queries using breakpoint keys. Also exposes current breakpoint to content via $current-breakpoint/root variables
-// WARNING: recommended for internal use only — this mixin will be removed / combined with "media" mixin in an upcoming version
+// WARNING: depreciated, may not work in future versions
+// fallback included for backwards compatible support
 @mixin breakpoint-layout($min: 0, $max: 0) {
-    @if map-has-key($breakpoint-map, $min) {
-        // make current breakpoint context available in global scope
-        $current-breakpoint: $min !global;
-        $current-rootsize: break-get($min, rootsize) !global;
+    @warn "breakpoint-layout mixin depreciated in 1.0.11 and may not work in future versions. Use media mixin instead";
 
-        @if $current-breakpoint == 0 and $max == 0 {
-            @content;
-        } @else {
-            $minw: break-get($min, start);
-            $maxw: none;
-
-            @if map-has-key($breakpoint-map, $max) {
-                $maxw: break-get($max, start) - 1px;
-            } @else {
-                @warn "#{$max} is not a valid breakpoint number";
-            }
-
-            @if $min != 0 and $max != 0 {
-                @include media($minw, $maxw) {
-                    @content;
-                }
-            } @else if $min != 0 {
-                @include media($minw) {
-                    @content;
-                }
-            } @else if $max != 0 {
-                @include media(0, $maxw) {
-                    @content;
-                }
-            }
-        }
-
-        // reset current breakpoint context
-        $current-breakpoint: 0 !global;
-        $current-rootsize: break-get(0, rootsize) !global;
-    } @else {
-        @warn "#{$min} is not a valid breakpoint number";
-    }
+    @include media($min, $max) {
+        @content;
+    };
 }
-
-
 
 // apply min-width media query to one or more breakpoints
 @mixin min-width($apply-breaks: 0) {
@@ -137,7 +136,7 @@
 // apply a style at all breakpoints, taking into account any change in baseline at different breakpoints
 @mixin all-breakpoints {
     @each $break in $breaks {
-        @include breakpoint-layout($break) {
+        @include media($break) {
             @content;
         }
     }
