@@ -2,7 +2,7 @@
     position: fixed;
     top: 0;
     right: 0;
-    z-index: 100;
+    z-index: 99999;
     border-bottom-left-radius: 0.5em;
     background-color: $debug-base;
     background-color: transparentize($debug-base, 0.15);
