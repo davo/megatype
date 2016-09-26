@@ -275,6 +275,10 @@
         @if type-of($use-subdivisions) != number {
             $use-subdivisions: 1;
         }
+
+        @if $use-subdivisions > 1 and $current-rootsize % $use-subdivisions > 0 {
+            @warn "You have specified a baseline subdivision (#{$use-subdivisions}) for break #{$current-breakpoint} (rootsize #{$current-rootsize}) that will not resolve to whole pixel line-heights (#{$current-rootsize} / #{$use-subdivisions} = #{$current-rootsize / $use-subdivisions}). This will cause severe rounding errors in browsers that will push your type off the grid; it is recommended you review your settings.";
+        }
         // starting with lineheight, convert to rem and round the value, then convert back to px
         $lineheight: rem-to-px(round(px-to-rem($lineheight * $use-subdivisions))) / $use-subdivisions;
     }
