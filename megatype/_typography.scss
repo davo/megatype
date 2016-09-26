@@ -142,7 +142,7 @@
 
 // Set type, measuring from baseline and cap-height
 // output is affected by $baseline-snap config; will snap to nearest baseline if so
-@mixin typeset($font, $fontsize, $lineheight, $leader: 0px, $trailer: 0px, $snap: $baseline-snap) {
+@mixin typeset($font, $fontsize, $lineheight, $leader: 0px, $trailer: 0px, $snap: $baseline-snap, $use-subdivisions: $baseline-subdivisions) {
     $context: index($breaks, $current-breakpoint);
 
     // Lets write some tests first
@@ -271,8 +271,12 @@
     // Next, set our linehight as a unitless value
     // if baseline snap is on, we'll round these values to 1 baseline unit (1rem)
     @if $snap == true {
+        // set default for subdivisions if not set, or explicitly turned off
+        @if type-of($use-subdivisions) != number {
+            $use-subdivisions: 1;
+        }
         // starting with lineheight, convert to rem and round the value, then convert back to px
-        $lineheight: rem-to-px(round(px-to-rem($lineheight)));
+        $lineheight: rem-to-px(round(px-to-rem($lineheight * $use-subdivisions))) / $use-subdivisions;
     }
 
     // compute an integer and set the line height
@@ -350,7 +354,7 @@
     // should warn user if baseline math outputs something unexpected
     // tolerance is 1px by default, can be set in config, see $debug-tolerance variable
     @if $snap == true {
-        $snap-check: rem-to-px(($fs-rem * $lh-integer + px-to-rem($type-bottom))) % $current-rootsize;
+        $snap-check: rem-to-px(($fs-rem * $lh-integer + px-to-rem($type-bottom))) % ($current-rootsize / $use-subdivisions);
         @if $snap-check > $debug-tolerance or $snap-check < -$debug-tolerance {
             @warn "baseline grid appears to be calculated off by #{$snap-check} at breakpoint #{$current-breakpoint} ($debug-tolerance: #{$debug-tolerance})"
         }

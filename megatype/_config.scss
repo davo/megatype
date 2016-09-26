@@ -64,6 +64,11 @@ $baseline-scaling: false !default;
 // can be disabled per-typeset mixin by passing last paramter ($snap) as false
 $baseline-snap: true !default;
 
+// baseline subdivisions specify a fraction of the grid that type can be snapped to.
+// useful for small text
+// can be overridden in typeset mixin with parameter $use-subdivisions: false
+$baseline-subdivisions: 1;
+
 // map for flexible retrieval of breakpoint info
 $breakpoint-map: (
     0: (
