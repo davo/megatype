@@ -93,6 +93,11 @@ $breakpoint-map: (
     )
 ) !default;
 
+// default breakpoint. This is where the default html font size will be set,
+// media queries will be generated to either side to apply rootsizes at remaining breakpoints
+// eg: for mobile first set this to 0, for desktop first set this to your largest breakpoint (with this config, 4)
+$default-break: 0 !default;
+
 // optional: set a minimum size for all typeset typography
 $min-font-size: false !default;
 
@@ -128,7 +133,7 @@ $current-rootsize: map-get(map-get($breakpoint-map, 0), rootsize) !default;
 // Compatibility
 // ===================================
 
-// fix line height on webkit where rounding errors pop up
+// fix line-height rounding errors in webkit safari
 $webkit-line-height-fix: true !default;
 
 

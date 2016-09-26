@@ -47,40 +47,88 @@
     }
 
     html {
-        $min-size: nth($sizes, 1);
-        $max-size: nth($sizes, 2);
+        // list compatible key
+        $default-break-key: $default-break + 1;
+
+        // set default
+        font-size: nth($sizes, $default-break-key) / 16px * 100%;
+
+        // get default size, and next size
+        $min-size: nth($sizes, $default-break-key) * nth($sizes, 1)/nth($sizes, 2);
+        $max-size: nth($sizes, $default-break-key);
         $min-width: break-get(nth($breaks, 2), start) / 2;
         $max-width: break-get(nth($breaks, 2), start);
 
-        font-size: $min-size / 16px * 100%;
-
         @if ($baseline-scaling == true) {
-            @media screen and (min-width: px-to-em(break-get(nth($breaks, 2), start) / 2)) {
-                font-size: calc(#{$min-size} + #{no-unit($max-size) - no-unit($min-size)} * (100vw - #{$min-width}) / #{no-unit($max-width) - no-unit($min-width)});
+            @if $default-break == 0 {
+                @media screen and (min-width: px-to-em(break-get(nth($breaks, 1), start) / 2)) {
+                    font-size: calc(#{$min-size} + #{no-unit($max-size) - no-unit($min-size)} * (100vw - #{$min-width}) / #{no-unit($max-width) - no-unit($min-width)});
+                }
+            } @else {
+                @warn "baseline scaling is currently only supported by mobile-first setups: please set $default-break: 0; to use this feature";
             }
         }
 
-        // Loop through breakpoints.
-        @for $i from 2 through $breakpoint-count {
-            @include min-width($i - 1) {
-                $min-size: nth($sizes, $i);
-                $min-width: break-get(nth($breaks, $i), start);
+        // min widths
+        // output breakpoints higher than $default-break using min-width media queries
+        @if $default-break + 1 < $breakpoint-count {
+            @for $i from $default-break-key + 1 through $breakpoint-count {
+                @include min-width($i - 1) {
+                    $min-size: nth($sizes, $i);
+                    $min-width: break-get(nth($breaks, $i), start);
 
-                font-size: $min-size / 16px * 100%;
+                    font-size: $min-size / 16px * 100%;
 
-                @if ($baseline-scaling == true) {
-                    @if $i < $breakpoint-count {
-                        $max-size: nth($sizes, $i + 1);
-                        $max-width: break-get(nth($breaks, $i + 1), start);
-                    } @else {
-                        // largest breakpoint. Keep the scaling consitent with the previous breakpoint
-                        $size-diff: nth($sizes, $i) - nth($sizes, $i - 1);
-                        $width-diff: break-get(nth($breaks, $i), start) - break-get(nth($breaks, $i - 1), start);
-                        $max-size: nth($sizes, $i) + $size-diff;
-                        $max-width: break-get(nth($breaks, $i), start) + $width-diff;
+                    @if ($baseline-scaling == true) {
+                        @if $default-break == 0 {
+                            @if $i < $breakpoint-count {
+                                $max-size: nth($sizes, $i + 1);
+                                $max-width: break-get(nth($breaks, $i + 1), start);
+                            } @else {
+                                // largest breakpoint. Keep the scaling consitent with the previous breakpoint
+                                $size-diff: nth($sizes, $i) - nth($sizes, $i - 1);
+                                $width-diff: break-get(nth($breaks, $i), start) - break-get(nth($breaks, $i - 1), start);
+                                $max-size: nth($sizes, $i) + $size-diff;
+                                $max-width: break-get(nth($breaks, $i), start) + $width-diff;
+                            }
+
+                            font-size: calc(#{$min-size} + #{no-unit($max-size) - no-unit($min-size)} * (100vw - #{$min-width}) / #{no-unit($max-width) - no-unit($min-width)});
+                        } @else {
+                            @warn "baseline scaling is currently only supported by mobile-first setups: please set $default-break: 0; to use this feature";
+                        }
                     }
+                }
+            }
+        }
 
-                    font-size: calc(#{$min-size} + #{no-unit($max-size) - no-unit($min-size)} * (100vw - #{$min-width}) / #{no-unit($max-width) - no-unit($min-width)});
+        // max widths
+        // output breakpoints lower than $default-break using max-width media queries
+        @if $default-break > 0 {
+            @for $i from $default-break through 1 {
+                @include max-width($i) {
+                    $min-size: nth($sizes, $i);
+                    $min-width: break-get(nth($breaks, $i), start);
+
+                    font-size: $min-size / 16px * 100%;
+
+                    @if ($baseline-scaling == true) {
+                        @if $default-break == 0 {
+                            @if $i < $breakpoint-count {
+                                $max-size: nth($sizes, $i + 1);
+                                $max-width: break-get(nth($breaks, $i + 1), start);
+                            } @else {
+                                // largest breakpoint. Keep the scaling consitent with the previous breakpoint
+                                $size-diff: nth($sizes, $i) - nth($sizes, $i - 1);
+                                $width-diff: break-get(nth($breaks, $i), start) - break-get(nth($breaks, $i - 1), start);
+                                $max-size: nth($sizes, $i) + $size-diff;
+                                $max-width: break-get(nth($breaks, $i), start) + $width-diff;
+                            }
+
+                            font-size: calc(#{$min-size} + #{no-unit($max-size) - no-unit($min-size)} * (100vw - #{$min-width}) / #{no-unit($max-width) - no-unit($min-width)});
+                        } @else {
+                            @warn "baseline scaling is currently only supported by mobile-first setups: please set $default-break: 0; to use this feature";
+                        }
+                    }
                 }
             }
         }
