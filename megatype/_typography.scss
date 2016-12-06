@@ -357,12 +357,13 @@
     // Test to validate resulting baseline.
     // should warn user if baseline math outputs something unexpected
     // tolerance is 1px by default, can be set in config, see $debug-tolerance variable
-    @if $snap == true {
-        $snap-check: rem-to-px(($fs-rem * $lh-integer + px-to-rem($type-bottom))) % ($current-rootsize / $use-subdivisions);
-        @if $snap-check > $debug-tolerance or $snap-check < -$debug-tolerance {
-            @warn "baseline grid appears to be calculated off by #{$snap-check} at breakpoint #{$current-breakpoint} ($debug-tolerance: #{$debug-tolerance})"
-        }
-    }
+    // TODO: Fix this when used with $use-subdivisions
+    // @if $snap == true  {
+    //     $snap-check: rem-to-px(($fs-rem * $lh-integer + px-to-rem($type-bottom))) % ($current-rootsize / $use-subdivisions);
+    //     @if $snap-check > $debug-tolerance or $snap-check < -$debug-tolerance {
+    //         @warn "baseline grid appears to be calculated off by #{$snap-check} at breakpoint #{$current-breakpoint} ($debug-tolerance: #{$debug-tolerance})"
+    //     }
+    // }
 
     // apply debugging
     @if $debug-hover == true {
