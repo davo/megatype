@@ -283,3 +283,4 @@ Looking for an example [Bootstrap integration](http://megatype-bootstrap.studiot
 - More example tests
 - Default config templates
 - Potentially build v2 [based on more advanced font metrics](http://iamvdo.me/en/blog/css-font-metrics-line-height-and-vertical-align), and/or [possible speculative future `cap` unit](https://github.com/w3c/csswg-drafts/issues/660)
+- potential for [opentype.js](https://github.com/nodebox/opentype.js) integration to produce font metrics for your chosen font, and automatically produce a config file
