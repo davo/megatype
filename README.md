@@ -282,3 +282,4 @@ Looking for an example [Bootstrap integration](http://megatype-bootstrap.studiot
 - Megatype Susy 2 example
 - More example tests
 - Default config templates
+- Potentially build v2 [based on more advanced font metrics](http://iamvdo.me/en/blog/css-font-metrics-line-height-and-vertical-align), and/or [possible speculative future `cap` unit](https://github.com/w3c/csswg-drafts/issues/660)
