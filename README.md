@@ -7,7 +7,7 @@ Execute typographic structure with ease.
 
 [![Build Status](https://travis-ci.org/StudioThick/megatype.svg?branch=master)](https://travis-ci.org/StudioThick/megatype)
 
-##Install
+## Install
 
 Download manually or install with Bower (recommended):
 
@@ -43,10 +43,10 @@ And import into your styles with:
 @import "megatype";
 ```
 
-##Using MegaType
+## Using MegaType
 MegaType provides typesetting tools, and some breakpoint mixins.
 
-###Config
+### Config
 Copy `_config.scss` into your codebase and override the `!default` settings where required, leaving unmodified values commented out.
 First, set up your breakpoint map (defaults shown) and your baseline snap & scaling preferences:
 
@@ -150,7 +150,7 @@ For most typefaces you will not need to change the default `cap-position`. Howev
 
 **Tip:** Setting `$debug-allow` and `$debug-baseline` variables to `true` will display a visual representation of the baseline on your typeset elements.
 
-###Setting type
+### Setting type
 
 With our rootsize initialised and our typographic config all set up, we can start setting type.
 
@@ -185,7 +185,7 @@ The `$fontsize`, `$leader` and `$trailer` are output in `rem` units, whereas the
 `$leader` is calculated alongside an offset to put our type on the baseline, and output as a `top` value. This is then added to the `$trailer`, which is output as `margin-bottom`.
 
 
-###Media queries
+### Media queries
 
 To set type at different breakpoints, our `typeset` mixin needs to know about the configured rootsize for that breakpoint. Use the `min-width` mixin with a breakpoint defined:
 
@@ -217,7 +217,7 @@ There is also a `max-width` mixin, but this will always use the smallest breakpo
 Both of these mixins can also accept `px` values for a custom media query shortcut, but these will use the settings from breakpoint `0` so should be avoided when setting type with `typeset`.
 
 
-###Debugging
+### Debugging
 MegaType contains extensive debugging tools to let you visualise your type and grid setup, these are enabled by default.
 
 ```scss
@@ -263,10 +263,10 @@ This mixin is intended to be used with inline links, but will also work with `in
 
 Alternatively, you can remove fancy underlines by including the `reset-link()` mixin on the element.
 
-###Why did we make this?
+### Why did we make this?
 Web typography, as we see it, is broken. For a full explanation on why MegaType exists, [read our blog post!](http://www.studiothick.com/essays/web-typography-is-broken)
 
-###Extras
+### Extras
 A few extra goodies.
 
 - See `_typography.scss` for some functions that can easily return information from your typeface configs.
@@ -275,11 +275,10 @@ A few extra goodies.
 - See `_toolset_easing.scss` for some handy functions to use in animation easing
 - See `_toolset_units.scss` for some handy unit conversion tools
 
-###Bootstrap example
-Looking for an example bootstrap integration? We've set up [a basic example here](https://github.com/StudioThick/megatype-bootstrap), based on the [yeoman webapp generator](https://github.com/yeoman/generator-webapp).
+### Bootstrap & Foundation integration examples
+Looking for an example [Bootstrap integration](http://megatype-bootstrap.studiothick.com/) or [Foundation integration](http://megatype-foundation.studiothick.com/)? We've set up [a basic Bootstrap example repo](https://github.com/StudioThick/megatype-bootstrap) and [a basic Foundation example repo](https://github.com/StudioThick/megatype-foundation).
 
 ## Roadmap
 - Megatype Susy 2 example
 - More example tests
 - Default config templates
-- Example themes?
