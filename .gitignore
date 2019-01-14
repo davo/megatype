@@ -3,3 +3,32 @@ node_modules
 .sass-cache
 bower_components
 .DS_Store
+
+# npm
+.npm
+npm-debug.log
+package-lock.json
+yarn.lock
+
+# mac
+.DS_Store
+
+# WebStorm
+.idea
+
+# VS Code
+.vscode/
+
+# Backups
+*.zip
+
+# Data
+src/training-data/
+
+# Assets
+assets/*.sketch
+assets/*.txt
+
+# Font
+
+app/styles/base/fonts/*

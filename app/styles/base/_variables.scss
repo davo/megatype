@@ -5,23 +5,19 @@
 // Megatype: https://github.com/StudioThick/megatype
 // =====================================================
 
-
-
 // ===================================
 // Colors
 // ===================================
 
 // colors
 $palettes: (
-    purple: #8232d2,
-    white: #ffffff,
-    wolf: #b7b8c7,
-    black: #000000
+	purple: #8232d2,
+	white: #ffffff,
+	wolf: #b7b8c7,
+	black: #000000
 );
 
 // $site-color-names: map-keys($palettes) !default;
-
-
 
 // // ===================================
 // // Debugging
@@ -49,8 +45,6 @@ $debug-hover: false;
 
 // // limit where baseline will report warnings
 // $debug-tolerance: 1px;
-
-
 
 // ===================================
 // Breakpoints & Grid
@@ -118,10 +112,6 @@ $link-offset: 2px;
 // $current-breakpoint: 0 !default;
 // $current-rootsize: map-get(map-get($breakpoint-map, 0), rootsize) !default;
 
-
-
-
-
 // ===================================
 // Typefaces
 // ===================================
@@ -130,12 +120,12 @@ $link-offset: 2px;
 // Here are some cap-height sizes to get you started:
 // Georgia: 0.66, Times / Times New Roman: 0.65, Palatino: 0.52
 // Lucida Grande: 0.72, Helvetica: 0.65, Helvetica Neue: 0.71, Verdana: 0.76, Tahoma: 0.76
-// $sans: (
-//     font-family: '"Helvetica Neue", Arial, sans-serif',
-//     regular: normal,
-//     bold: bold,
-//     cap-height: 0.71
-// ) !default;
+$sans: (
+	font-family: '"Graphik", Arial, sans-serif',
+	regular: normal,
+	bold: bold,
+	cap-height: 0.71
+) !default;
 
 // $serif: (
 //     font-family: 'Georgia, serif',
